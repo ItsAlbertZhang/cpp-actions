@@ -17,3 +17,11 @@ jobs:
               with:
                   build-dir: ./build/obj/Release
                   options: -DCMAKE_BUILD_TYPE=Release
+
+            - name: Run executable on Unix
+              if: runner.os != 'Windows'
+              run: ./build/obj/Release/main
+
+            - name: Run executable on Windows
+              if: runner.os == 'Windows'
+              run: .\build\obj\Release\main.exe
