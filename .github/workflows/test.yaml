@@ -27,4 +27,9 @@ jobs:
               if: runner.os == 'Windows'
               run: .\build\bin\Release\main.exe
 
-            # - run: ls ./build/bin
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ runner.os }}-main
+                  path: |
+                      ./build/bin/Release/*
