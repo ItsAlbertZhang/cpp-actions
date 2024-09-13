@@ -1,0 +1,17 @@
+on: push
+
+jobs:
+    windows-build:
+        runs-on: windows-latest
+        steps:
+            - run: cmake --version
+    ubuntu-build:
+        runs-on: ubuntu-latest
+        steps:
+            - run: pwd
+            - run: cmake --version
+    macos-build:
+        runs-on: macos-latest
+        steps:
+            - run: pwd
+            - run: cmake --version
