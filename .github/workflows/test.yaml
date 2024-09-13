@@ -26,4 +26,4 @@ jobs:
             #   if: runner.os == 'Windows'
             #   run: .\build\bin\Release\main.exe
 
-            - run: ls -la ./build
+            - run: ls -la ./build/bin
