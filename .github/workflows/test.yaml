@@ -4,7 +4,7 @@ jobs:
     compile:
         strategy:
             matrix:
-                os: [ubuntu-latest, macos-latest, windows-latest]
+                os: [ubuntu-24.04, macos-latest, windows-latest]
 
         runs-on: ${{ matrix.os }}
 
@@ -36,4 +36,4 @@ jobs:
 
             - name: check compiler
               if: runner.os != 'Windows'
-              run: which clang-17
+              run: clang-17 --version
