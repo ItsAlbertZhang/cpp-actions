@@ -33,3 +33,7 @@ jobs:
                   name: ${{ runner.os }}-main
                   path: |
                       ./build/bin/Release/*
+
+            - name: check compiler
+              if: runner.os != 'Windows'
+              run: which clang-17
