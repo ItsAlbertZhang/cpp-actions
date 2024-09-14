@@ -6,33 +6,48 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-24.04 }
-          - { os: macos-latest }
-          - { os: windows-latest }
+          - {
+              os: ubuntu-24.04,
+              cmd-run: ./build/bin/Release/main,
+              compiler-c: /usr/bin/clang-17,
+              compiler-cpp: /usr/bin/clang++-17,
+            }
+          - {
+              os: macos-latest,
+              cmd-run: ./build/bin/Release/main,
+              compiler-c: /opt/homebrew/opt/llvm@17/bin/clang,
+              compiler-cpp: /opt/homebrew/opt/llvm@17/bin/clang++,
+            }
+          - { os: windows-latest, cmd-run: .\build\bin\Release\main.exe }
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      - name: Checkout Repository
+      - name: 1. Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build Project
+      - name: 2. Prepare Environment
+        if: matrix.config.os == 'macos-latest'
+        run: |
+          brew install llvm@17
+          export PATH="/opt/homebrew/opt/llvm@17/bin:$PATH"
+          export LDFLAGS="-L/opt/homebrew/opt/llvm@17/lib"
+          export CPPFLAGS="-I/opt/homebrew/opt/llvm@17/include"
+
+      - name: 3. Build Project
         uses: threeal/cmake-action@v2
         with:
           build-dir: ./build/obj/Release
           options: |
             CMAKE_BUILD_TYPE=Release
+          c-compiler: ${{ matrix.config.compiler-c || '' }}
+          cxx-compiler: ${{ matrix.config.compiler-cpp || '' }}
 
-      - name: Run executable on Unix
-        if: runner.os != 'Windows'
-        run: ./build/bin/Release/main
+      - name: 4. Run executable
+        run: ${{ matrix.config.cmd-run }}
 
-      - name: Run executable on Windows
-        if: runner.os == 'Windows'
-        run: .\build\bin\Release\main.exe
-
-      - name: Upload artifact
+      - name: 5. Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }}-main
+          name: ${{ runner.os }}
           path: |
             ./build/bin/Release/*
