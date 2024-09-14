@@ -20,6 +20,7 @@ jobs:
             }
           - { os: windows-latest, cmd-run: .\build\bin\Release\main.exe }
     runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }}
 
     steps:
       - name: 1. Checkout Repository
